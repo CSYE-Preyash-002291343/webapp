@@ -6,7 +6,7 @@ require("dotenv").config();
 const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
-//Database connection via Sequelize
+//Database connection via Sequelize ORM
 const { Sequelize } = require('sequelize');
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
     host: process.env.DB_HOST,
@@ -14,6 +14,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
     port: process.env.DB_PORT
   });
 
+//Payload method to check if request body is empty
 function payload (req, res, next) {
     if(Object.keys(req.body).length !== 0) {
         res.sendStatus(400);       
@@ -22,6 +23,7 @@ function payload (req, res, next) {
     }
 }
 
+//Added healthz endpoint
 app.get('/healthz', payload, async (req, res) => {
     try{
         await sequelize.authenticate();
@@ -34,6 +36,7 @@ app.get('/healthz', payload, async (req, res) => {
     }
 });
 
+//Added method to handle all other methods
 app.all('*', (req, res) => {
     res.header('Cache-Control', 'no-store');
     res.header('Pragma', 'no-cache');
