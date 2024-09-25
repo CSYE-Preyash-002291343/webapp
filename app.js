@@ -16,8 +16,8 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
 
 //Payload method to check if request body is empty
 function payload (req, res, next) {
-    if(Object.keys(req.body).length !== 0) {
-        res.sendStatus(400);       
+    if(Object.keys(req.body).length !== 0 || Object.keys(req.query).length !== 0){
+        res.status(400).send();       
     } else {
         next();
     }
@@ -30,18 +30,18 @@ app.get('/healthz', payload, async (req, res) => {
         res.header('Cache-Control', 'no-store');
         res.header('Pragma', 'no-cache');
         res.header('Expires', '0');
-        res.sendStatus(200);
+        res.status(200).send();
     }catch(err){
-        res.sendStatus(503);
+        res.status(503).send();
     }
 });
 
 //Added method to handle all other methods
-app.all('*', (req, res) => {
+app.all('*',  (req, res) => {
     res.header('Cache-Control', 'no-store');
     res.header('Pragma', 'no-cache');
     res.header('Expires', '0');
-    res.sendStatus(405);
+    res.status(405).send();
 });
 
 app.listen(PORT, () => {
