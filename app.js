@@ -20,6 +20,8 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
 async function dbconnect(){
     try{
         await sequelize.authenticate();
+        User.init(sequelize);
+        User.sync();
         console.log('Connected to DB');
     }catch(err){
         console.error('Disconnected from DB');
