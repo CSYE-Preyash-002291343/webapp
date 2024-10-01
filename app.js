@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 require("dotenv").config();
+const userRouter = require('./routes/user');
 const healthzRouter = require('./routes/healthz');
 const User = require('./models/userModel.js');
 
@@ -30,6 +31,7 @@ async function dbconnect(){
 dbconnect();
 
 app.use('/healthz', healthzRouter);
+app.use('/v1/user/', userRouter)
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
