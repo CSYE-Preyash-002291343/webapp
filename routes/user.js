@@ -7,6 +7,7 @@ const authenticateUser = require('../middleware/authenticator');
 const userController = require('../controller/userController');
 const validateCreateUser = require('../middleware/validatorForCreate');
 const validateUpdateUserInfo = require('../middleware/validatorForUpdate');
+const payload = require('../middleware/Payload');
 
 //create user
 router.post('/', validateCreateUser, userController.createUser);
@@ -16,7 +17,7 @@ router.head('/self', async (req, res) => {
 });
 
 //get user by id
-router.get('/self', authenticateUser, userController.getUser);
+router.get('/self', payload, authenticateUser, userController.getUser);
 
 //update user by id
 router.put('/self', validateUpdateUserInfo, authenticateUser, userController.updateUser);

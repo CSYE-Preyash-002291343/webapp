@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express();
 require("dotenv").config();
+const payload = require('../middleware/Payload');
 
 //Database connection via Sequelize ORM
 const { Sequelize } = require('sequelize');
@@ -9,20 +10,6 @@ const sequelize1 = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proce
     dialect: 'postgres',
     port: process.env.DB_PORT
   });
-
-//Payload method to check if request body is empty
-function payload (req, res, next) {
-    if(Object.keys(req.body).length !== 0 || Object.keys(req.query).length !== 0){
-        res.status(400).send();       
-    }
-    if(req.headers && req.headers["content-length"] > 0){
-        res.status(400).send();
-    }
-    if(req.url.includes('?')){
-         res.status(400).send();
-    }
-    next();
-}
 
 //Error handling middleware to not show client error messages in body
 router.use((err, req, res, next) => {
@@ -33,6 +20,9 @@ router.use((err, req, res, next) => {
 });
 
 router.head('/', payload, async (req, res) => {
+    res.header('Cache-Control', 'no-store');
+    res.header('Pragma', 'no-cache');
+    res.header('Expires', '0');
     res.status(405).send();
 });
 
