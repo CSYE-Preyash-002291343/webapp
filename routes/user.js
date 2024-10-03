@@ -22,8 +22,7 @@ router.get('/self', payload, authenticateUser, userController.getUser);
 //update user by id
 router.put('/self', validateUpdateUserInfo, authenticateUser, userController.updateUser);
 
-//method to handle all other requests with 405
-router.all('*', (req, res) => {
+router.all('/self', (req, res) => {
     res.header('Cache-Control', 'no-store');
     res.header('Pragma', 'no-cache');
     res.header('Expires', '0');

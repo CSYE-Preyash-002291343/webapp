@@ -33,6 +33,13 @@ dbconnect();
 app.use('/healthz', healthzRouter);
 app.use('/v1/user/', userRouter)
 
+app.all('*', (req, res) => {
+    res.header('Cache-Control', 'no-store');
+    res.header('Pragma', 'no-cache');
+    res.header('Expires', '0');
+    res.status(404).send();
+});
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
