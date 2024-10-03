@@ -13,6 +13,9 @@ const payload = require('../middleware/Payload');
 router.post('/', validateCreateUser, userController.createUser);
 
 router.head('/self', async (req, res) => {
+    res.header('Cache-Control', 'no-store');
+    res.header('Pragma', 'no-cache');
+    res.header('Expires', '0');
     res.status(405).send();
 });
 

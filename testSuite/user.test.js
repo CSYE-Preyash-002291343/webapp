@@ -49,10 +49,10 @@ describe('User routes', () => {
   });
 });
 
-const restricted = ['options', 'head', 'delete', 'patch',];
+const restricted = ['options', 'head', 'delete', 'patch'];
 restricted.forEach((method) => {
     it('should return 405', async () => {
-        const response = await request(app)[method]('/v1/user/');
+        const response = await request(app)[method]('/v1/user/self');
         expect(response.statusCode).toBe(405);
         expect(response.headers['cache-control']).toBe('no-store');
         expect(response.headers['pragma']).toBe('no-cache');
