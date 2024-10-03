@@ -1,6 +1,7 @@
 const { body, validationResult } = require('express-validator');
 
 const acceptedpayload = ['first_name', 'last_name', 'email', 'password'];
+const ignoredfields = ['account_created', 'account_updated'];
 
 const validateCreateUser = [
     body('first_name').trim().isAlpha(),
@@ -8,7 +9,7 @@ const validateCreateUser = [
     body('email').isEmail(),
     (req, res, next) => {
         const fields = Object.keys(req.body);
-        const isValid = fields.every((field) => acceptedpayload.includes(field));
+        const isValid = fields.every((field) => acceptedpayload.includes(field)|| ignoredfields.includes(field));
         if (!isValid) {
             return res.status(400).send();
         }

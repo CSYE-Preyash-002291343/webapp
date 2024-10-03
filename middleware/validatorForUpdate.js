@@ -10,10 +10,16 @@ const validateUpdateUserInfo = [
         const fields = Object.keys(req.body);
         const isValidforUpdate = fields.every((field) => acceptedpayloadforupdate.includes(field));
         if (!isValidforUpdate) {
+            res.header('Cache-Control', 'no-store');
+            res.header('Pragma', 'no-cache');
+            res.header('Expires', '0');
             return res.status(400).send();
         }
         const error = validationResult(req);
         if (!error.isEmpty()) {
+            res.header('Cache-Control', 'no-store');
+            res.header('Pragma', 'no-cache');
+            res.header('Expires', '0');
             return res.status(400).send();
         }
         next();
