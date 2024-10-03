@@ -1,46 +1,92 @@
-# WebApp
 
-## Overview
+# Webapp
 
-This is a webapp with a health-check API implemented to monitor the application status.
+This project is a RESTful API built with Node.js and Express, utilizing Sequelize as the ORM for PostgreSQL database management. It includes user management endpoints with robust validation and error handling mechanisms.
 
-## Tech Stack:
+## Features
 
-**Backend**: Node.JS
-**Backend ORM**: Sequeslize 
-**Database**: Postgres
+- User registration, authentication, and management.
+- Secure password handling with bcrypt.
+- Health check endpoint.
+- Environment variable management with dotenv.
+- Custom middleware for validation and error handling.
+
+## Getting Started
+
+### Prerequisites
+
+Ensure you have Node.js and npm installed:
+\```
+node --version
+npm --version
+\```
+
+### Installation
+
+1. Clone the repository:
+\```
+git clone <repository-url>
+cd <repository-directory>
+\```
+
+2. Install dependencies:
+\```
+npm install
+\```
+
+3. Set up environment variables:
+Create a `.env` file in the root directory and update it with your database configuration and port number:
+\```
+
+    PORT=5000
+
+    DB_NAME=your_database_name
+
+    DB_USER=your_database_user
+
+    DB_PASS=your_database_password
+
+    DB_HOST=your_database_host
+
+    DB_PORT=your_database_port
+
+\```
+
+### Running the Server
+
+To start the server, run:
+\```
+npm start
+\```
+
+### API Endpoints
+
+- **POST /v1/user/**: Register a new user.
+- **GET /v1/user/self**: Fetch the authenticated user's data.
+- **PUT /v1/user/self**: Update the authenticated user's data.
+- **GET /healthz**: Health check.
+
+### Structure
+
+- `models/`: Contains Sequelize model definitions.
+- `routes/`: Routing related files.
+- `middleware/`: Middleware for authentication and payload validation.
+- `controller/`: Business logic of the application.
+- `testSuite/` : Unit Tests for the application.
+
+### Testing
+
+To run tests, execute:
+\```
+npm test
+\```
 
 
-## To start the webapp you will need to follow the steps below:
+## License
 
-1. You can use `git clone` via SSH or Download the code as Zip to your local.
-2. Before starting the application, you will need to install the dependencies with `npm install`
-3. Next, you will have to setup the env file with the necessary variables which will be required in the main app.
-4. Once you are done with this setup, you can now run the application with `npm start`
-5. As per the flow of the code, the server will be running on port->*5000*, you can visit http://localhost:5000/healthz.
-6. You can now go ahead and test all the endpoint methods to verify the working for all as expected.
+This project is licensed under the MIT License - see the `LICENSE` file for details.
 
-## Database connection Steps
+## Acknowledgments
 
-To check whehther you are connected to the DB you can use :
-    `psql -h localhost -p 5432 -U postgres -d <your-DB-name>`
-
-To stop the DB server from running you can use the following command:
-    `pg_ctl stop -D "C:\Program Files\PostgreSQL\16\data"`
-
-To Start the DB server back up use the following command:
-    `pg_ctl start -D "C:\Program Files\PostgreSQL\16\data"`
-
-### Since I am version 16 for postgresql, I have that in the path, you can change the version number based on your version 
-
-
-## Endpoints Testing :
-
-1. GET method :
-   1. Without payload/query - `200 OK`
-   2. With payload - `400 Bad Request`
-   3. With bad payload - `400 Bad Request`
-   4. With Query - `400 Bad Request`
-2. All other methods : `405 Method Not Allowed`   
-
-## If you are still facing any issue, please reach out to mehta.prey@northeastern.edu
+- Node.js community
+- Sequelize documentation
