@@ -22,7 +22,7 @@ jobs:
         sudo systemctl status postgresql.service
 
     - name: Wait for PostgreSQL to be ready
-      run: until pg_isready -h localhost -p 5432;
+      run: until pg_isready -h localhost -p 5432; do sleep 3; done
 
     - name: Create PostgreSQL user and database
       run: |
