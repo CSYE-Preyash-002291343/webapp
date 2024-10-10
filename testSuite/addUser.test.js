@@ -2,7 +2,6 @@ const request = require('supertest');
 const User = require('../models/userModel');
 const { Sequelize } = require('sequelize');
 require("dotenv").config();
-const express = require('express');
 
 const app = require('../app');
 const email = 'test@gmail.com';
@@ -13,17 +12,20 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
     port: process.env.DB_PORT
   });
 
+  // Test the database connection
   describe('Database Connection Tests', () => {
     beforeAll(async () => {
         await sequelize.authenticate(); 
         await User.init(sequelize);
     });
 
+    //Closing the database connection after all tests
     afterAll(async () => {
         await User.destroy({ where: { email: email } });
         await sequelize.close(); 
     });
 
+    // Testing the user creation endpoint
     it('should create a new user with valid authentication', async () => {
         const userData = {
             email: email,
