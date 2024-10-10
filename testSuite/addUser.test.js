@@ -17,7 +17,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
     beforeAll(async () => {
         await sequelize.authenticate(); 
         await User.init(sequelize);
-        await User.sync();
+        await User.sync({ force: true });
     });
 
     afterAll(async () => {
