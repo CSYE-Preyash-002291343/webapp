@@ -24,6 +24,7 @@ exports.createUser = async (req, res) => {
         return res.status(201).json(userData);
     }
     catch (error) {
+        console.log(error);
         return res.status(400).send('');
     }
 };

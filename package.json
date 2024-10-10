@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test:DB": "jest ./testSuite/addUser.test.js",
     "start": "nodemon app.js"
   },
   "keywords": [],
