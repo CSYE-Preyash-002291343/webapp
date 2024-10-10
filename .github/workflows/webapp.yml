@@ -34,7 +34,7 @@ jobs:
     - name: Setup NodeJS Environment
       uses: actions/setup-node@v3
       with:
-        node-version: '20'
+        node-version: '20.14.0'
 
     - name: Install dependencies
       run: npm install
@@ -46,4 +46,4 @@ jobs:
         DB_NAME: ${{ secrets.DB_NAME }}
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PORT: 5432
-      run: npm run test:DB
+      run: npm run test:DB -- --forceExit
