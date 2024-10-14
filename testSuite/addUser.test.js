@@ -27,7 +27,6 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
     it('should create a new user with valid authentication', async () => {
         const userData = {
             email: email,
-            password: 'newsecurepassword',
             first_name: 'New',
             last_name: 'User'
         };
