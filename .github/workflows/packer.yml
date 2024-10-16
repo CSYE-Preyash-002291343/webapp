@@ -27,6 +27,7 @@ jobs:
 
       - name: Format Packer template
         run: |
+          cd packer
           packer fmt -check -diff .
           if [ $? -ne 0 ]; then
             exit 1
@@ -34,6 +35,7 @@ jobs:
 
       - name: Validate Packer template
         run: |
+          cd packer
           packer validate .
           if [ $? -ne 0 ]; then
             exit 1
