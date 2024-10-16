@@ -65,15 +65,15 @@ build {
     ]
     inline = [
       # Install Node.js
-      "sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash"
-      "nvm install 20.14.0"
+      "sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash",
+      "nvm install 20.14.0",
       # Install PostgreSQL
-      "wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /usr/share/keyrings/postgresql-archive-keyring.gpg > /dev/null"
+      "wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /usr/share/keyrings/postgresql-archive-keyring.gpg > /dev/null",
       "echo \"deb [signed-by=/usr/share/keyrings/postgresql-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main\" | sudo tee /etc/apt/sources.list.d/pgdg.list",
       "sudo apt-get update",
       "sudo apt-get upgrade -y",
       "sudo apt install postgresql postgresql-contrib",
-      "sudo -u postgres psql"
+      "sudo -u postgres psql",
 
       # Create a user and database
       "sudo -u postgres psql -c \"ALTER USER postgres WITH PASSWORD 'postgresPass';\"",
