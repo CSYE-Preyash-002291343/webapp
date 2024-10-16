@@ -27,10 +27,6 @@ variable "subnet_id" {
   default = "subnet-0f8936d5765c62460"
 }
 
-variable "postgresPass" {
-  type    = string
-}
-
 source "amazon-ebs" "example" {
   ami_name = "test-ami"
   region   = var.aws_region
@@ -76,7 +72,7 @@ build {
       "sudo -u postgres psql",
 
       # Create a user and database
-      "sudo -u postgres psql -c \"ALTER USER postgres WITH PASSWORD 'postgresPass';\"",
+      "sudo -u postgres psql -c \"ALTER USER postgres WITH PASSWORD 'Banana@98';\"",
       "sudo -u postgres psql -c \"CREATE DATABASE \\\"CSYE6225-webapp\\\";\"",
       "sudo apt-get clean",
     ]
