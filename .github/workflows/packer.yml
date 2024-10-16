@@ -22,7 +22,7 @@ jobs:
 
       - name : Packer Init
         run : |
-          cd packer/
+          cd packer
           packer init .
 
       - name: Format Packer template
