@@ -29,6 +29,7 @@ variable "subnet_id" {
 
 variable "Port" {
   type    = number
+  default = 5000
 }
 
 variable "db_name" {
@@ -43,10 +44,12 @@ variable "db_user" {
 
 variable "db_pass" {
   type    = string
+  default = "defaultpassword"
 }
 
 variable "db_host" {
   type    = string
+  default = "localhost"
 }
 
 source "amazon-ebs" "example" {
@@ -98,7 +101,7 @@ build {
     ]
     scripts = [
         "installer.sh",
-        "setup.sh"
+        "sysdsrvc.sh"
     ]
   }
 }
