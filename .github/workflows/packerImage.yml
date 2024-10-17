@@ -81,4 +81,4 @@ jobs:
         run: |
           cd packer/
           packer init .        
-          packer build -var 'Port=${{ secrets.PORT }}' -var 'db_user=${{ secrets.DB_USER }}' -var 'db_pass=${{ secrets.DB_PASS }}' -var 'db_name=${{ secrets.DB_NAME }}' aws.pkr.hcl
+          packer build -var 'Port=${{ secrets.PORT }}' -var 'db_user=${{ secrets.DB_USER }}' -var 'db_pass=${{ secrets.DB_PASS }}' -var 'db_name=${{ secrets.DB_NAME }}' -var 'amiUsers=${{ secrets.AWS_USER}}' -var 'aws_region=${{vars.REGION}}' -var 'source_ami=${{vars.AMI}}' -var 'subnet_id=${{vars.SUBNET}}' aws.pkr.hcl

@@ -52,6 +52,15 @@ variable "db_host" {
   default = "localhost"
 }
 
+variable "amiUsers" {
+  type    = string
+  default = ""
+}
+
+locals {
+  ami_users = split(",", var.amiUsers)
+}
+
 source "amazon-ebs" "example" {
   ami_name = "test-ami-{{timestamp}}"
   region   = var.aws_region
@@ -67,6 +76,7 @@ source "amazon-ebs" "example" {
   source_ami    = var.source_ami
   ssh_username  = var.ssh_username
   subnet_id     = var.subnet_id
+  ami_users     = local.ami_users
 
   launch_block_device_mappings {
     delete_on_termination = true
@@ -100,8 +110,8 @@ build {
       "DB_HOST=${var.db_host}"
     ]
     scripts = [
-        "installer.sh",
-        "sysdsrvc.sh"
+      "installer.sh",
+      "sysdsrvc.sh"
     ]
   }
 }
