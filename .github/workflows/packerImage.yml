@@ -1,13 +1,14 @@
 name : packerImage Build
 
 on:
-    pull_request:
+    push:
       branches:
-        - main
+        - main 
     workflow_dispatch:
   
 jobs:
  test:
+    if: github.repository == 'CSYE-Preyash-002291343/webapp'
     runs-on: ubuntu-latest
   
     steps:
@@ -50,6 +51,7 @@ jobs:
         run: npm run test:DB -- --forceExit
 
  packer:
+    if: github.repository == 'CSYE-Preyash-002291343/webapp'
     runs-on: ubuntu-latest
 
     steps:

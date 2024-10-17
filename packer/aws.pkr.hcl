@@ -77,7 +77,7 @@ source "amazon-ebs" "example" {
     max_attempts  = 50
   }
 
-  instance_type = var.instance_type  
+  instance_type = var.instance_type
   source_ami    = var.source_ami
   ssh_username  = var.ssh_username
   subnet_id     = var.subnet_id
