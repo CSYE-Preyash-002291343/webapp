@@ -53,7 +53,7 @@ variable "db_host" {
 }
 
 source "amazon-ebs" "example" {
-  ami_name = "test-ami-{{YYYY}}-{{MM}}-{{DD}}-{{hh}}-{{mm}}-{{ss}}"
+  ami_name = "test-ami-{{timestamp}}"
   region   = var.aws_region
 
   ami_regions = ["us-east-1"]
