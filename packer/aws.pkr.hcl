@@ -93,7 +93,7 @@ build {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
       "CHECKPOINT_DISABLE=1",
-      "DB_PORT=${var.Port}",
+      "PORT=${var.Port}",
       "DB_NAME=${var.db_name}",
       "DB_USER=${var.db_user}",
       "DB_PASS=${var.db_pass}",
