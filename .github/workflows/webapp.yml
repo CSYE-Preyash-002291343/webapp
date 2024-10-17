@@ -41,7 +41,7 @@ jobs:
 
     - name: Run tests
       env:
-        DB_USER: ${{ secrets.DB_USER }}
+        DB_USER: ${{ secrets.DB_USER_GITHUB }}
         DB_PASS: ${{ secrets.DB_PASS }}
         DB_NAME: ${{ secrets.DB_NAME }}
         DB_HOST: ${{ secrets.DB_HOST }}

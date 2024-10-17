@@ -11,7 +11,7 @@ sudo apt install -y postgresql postgresql-contrib
 
 # Setup PostgreSQL
 echo "Creating database ..."
-sudo -u postgres psql -c "CREATE DATABASE "CSYE6225-webapp";"
+sudo -u postgres psql -c "CREATE DATABASE "CSYE625webapp";"
 echo "Updating PostgreSQL user password..."
 sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'Banana@98';" 
 
