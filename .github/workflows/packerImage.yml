@@ -58,7 +58,7 @@ jobs:
 
       - name: Archieve the webapp
         run: |
-          'cd ..'
+          cd ..
           tar -czvf webapp.tar.gz webapp
         
       - name: AWS Credential Setup
