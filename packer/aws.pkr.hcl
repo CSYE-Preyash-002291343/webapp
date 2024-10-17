@@ -27,8 +27,30 @@ variable "subnet_id" {
   default = "subnet-0f8936d5765c62460"
 }
 
+variable "Port" {
+  type    = number
+}
+
+variable "db_name" {
+  type    = string
+  default = "CSYE6225-webapp"
+}
+
+variable "db_user" {
+  type    = string
+  default = "postgres"
+}
+
+variable "db_pass" {
+  type    = string
+}
+
+variable "db_host" {
+  type    = string
+}
+
 source "amazon-ebs" "example" {
-  ami_name = "test-ami"
+  ami_name = "test-ami-10/16"
   region   = var.aws_region
 
   ami_regions = ["us-east-1"]
@@ -46,7 +68,7 @@ source "amazon-ebs" "example" {
   launch_block_device_mappings {
     delete_on_termination = true
     device_name           = "/dev/sda1"
-    volume_size           = 8
+    volume_size           = 25
     volume_type           = "gp2"
   }
 }
@@ -54,27 +76,29 @@ source "amazon-ebs" "example" {
 build {
   sources = ["source.amazon-ebs.example"]
 
+  provisioner "file" {
+    source      = "/home/runner/work/webapp/webapp.tar.gz"
+    destination = "/tmp/webapp.tar.gz"
+  }
+
+  provisioner "file" {
+    source      = "/home/runner/work/webapp/webapp/.env"
+    destination = "/tmp/.env"
+  }
+
   provisioner "shell" {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
-      "CHECKPOINT_DISABLE=1"
+      "CHECKPOINT_DISABLE=1",
+      "DB_PORT=${var.db_port}",
+      "DB_NAME=${var.db_name}",
+      "DB_USER=${var.db_user}",
+      "DB_PASS=${var.db_pass}",
+      "DB_HOST=${var.db_host}"
     ]
-    inline = [
-      # Install Node.js
-      "sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash",
-      "nvm install 20.14.0",
-      # Install PostgreSQL
-      "wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /usr/share/keyrings/postgresql-archive-keyring.gpg > /dev/null",
-      "echo \"deb [signed-by=/usr/share/keyrings/postgresql-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main\" | sudo tee /etc/apt/sources.list.d/pgdg.list",
-      "sudo apt-get update",
-      "sudo apt-get upgrade -y",
-      "sudo apt install postgresql postgresql-contrib",
-      "sudo -u postgres psql",
-
-      # Create a user and database
-      "sudo -u postgres psql -c \"ALTER USER postgres WITH PASSWORD 'Banana@98';\"",
-      "sudo -u postgres psql -c \"CREATE DATABASE \\\"CSYE6225-webapp\\\";\"",
-      "sudo apt-get clean",
+    scripts = [
+        "installer.sh",
+        "setup.sh"
     ]
   }
 }
