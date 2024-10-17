@@ -24,7 +24,7 @@ async function dbconnect(){
         User.sync({alter: true});
         console.log('Connected to DB');
     }catch(err){
-        console.error('Disconnected from DB');
+        console.error('Disconnected from DB', err);
     }
 }
 dbconnect();
