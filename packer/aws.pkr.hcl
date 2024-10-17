@@ -34,7 +34,7 @@ variable "Port" {
 
 variable "db_name" {
   type    = string
-  default = "CSYE6225-webapp"
+  default = "db"
 }
 
 variable "db_user" {
