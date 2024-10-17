@@ -1,0 +1,55 @@
+name: Packer CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  packer_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Archieve the webapp
+        run: |
+          cd ..
+          tar -czvf webapp.tar.gz webapp
+
+      - name: Install Packer
+        run: |
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install packer # Specify the version of Packer you want to use
+
+      - name: create .env file
+        run: |
+          echo "DB_PORT=${{ secrets.DB_PORT}}" >> .env
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+          echo "DB_PASS=${{ secrets.DB_PASS }}" >> .env
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+
+      - name : Packer Init
+        run : |
+          cd packer
+          packer init .
+
+      - name: Format Packer template
+        run: |
+          cd packer
+          packer fmt -check -diff .
+          if [ $? -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Validate Packer template
+        run: |
+          cd packer
+          packer validate .
+          if [ $? -ne 0 ]; then
+            exit 1
+          fi

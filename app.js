@@ -1,13 +1,12 @@
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
 require("dotenv").config();
 const userRouter = require('./routes/user');
 const healthzRouter = require('./routes/healthz');
 const User = require('./models/userModel.js');
 
 const PORT = process.env.PORT || 3000;
-app.use(bodyParser.json());
+app.use(express.json());
 
 //Database connection via Sequelize ORM
 const { Sequelize } = require('sequelize');
@@ -22,10 +21,10 @@ async function dbconnect(){
     try{
         await sequelize.authenticate();
         User.init(sequelize);
-        User.sync();
+        User.sync({alter: true});
         console.log('Connected to DB');
     }catch(err){
-        console.error('Disconnected from DB');
+        console.error('Disconnected from DB', err);
     }
 }
 dbconnect();
