@@ -1,10 +1,10 @@
 name : packerImage Build
 
 on:
-  push:
-    branches:
+    push:
+      branches:
         - main 
-  workflow_dispatch:
+    workflow_dispatch:
   
 jobs:
  test:
