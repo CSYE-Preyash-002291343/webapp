@@ -114,7 +114,7 @@ build {
       "DB_PASS=${var.db_pass}",
       "DB_HOST=${var.db_host}"
     ]
-    scripts     = [
+    scripts = [
       "installer.sh",
       "sysdsrvc.sh"
     ]
