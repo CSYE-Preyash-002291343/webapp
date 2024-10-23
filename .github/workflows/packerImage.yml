@@ -50,6 +50,7 @@ jobs:
           DB_PORT: 5432
         run: npm run test:DB -- --forceExit
 
+#pack the webapp and create .env file and build the packer image
  packer:
     if: github.repository == 'CSYE-Preyash-002291343/webapp'
     runs-on: ubuntu-latest
