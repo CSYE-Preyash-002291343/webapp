@@ -5,6 +5,10 @@ wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-
 sudo dpkg -i amazon-cloudwatch-agent.deb
 rm amazon-cloudwatch-agent.deb  
 
+sudo mkdir -p /opt/src/webapp/logs
+sudo chown -R csye6225:csye6225 /opt/src/webapp/logs
+sudo chmod -R 755 /opt/src/webapp/logs
+
 # Set up CloudWatch Agent configuration
 echo "Creating CloudWatch Agent configuration file..."
 sudo mkdir -p /opt/aws/amazon-cloudwatch-agent/etc
