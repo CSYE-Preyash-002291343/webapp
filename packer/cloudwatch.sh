@@ -11,24 +11,23 @@ sudo mkdir -p /opt/aws/amazon-cloudwatch-agent/etc
 sudo tee /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json > /dev/null <<EOF
 {
   "agent": {
-      "metrics_collection_interval": 10,
-      "logfile": "/var/logs/amazon-cloudwatch-agent.log"
+    "metrics_collection_interval": 10,
+    "logfile": "/var/logs/amazon-cloudwatch-agent.log"
   },
   "logs": {
-      "logs_collected": {
-          "files": {
-              "collect_list": [
-                  {
-                      "file_path": "/opt/webapp/logs/webapp.log",
-                      "log_group_name": "webapp",
-                      "log_stream_name": "API-Server",
-                  }
-              ]
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/opt/webapp/logs/webapp.log",
+            "log_group_name": "webapp",
+            "log_stream_name": "API-Server"
           }
+        ]
       }
+    },
+"log_stream_name": "cloudwatch_log_stream"
   },
-  "log_stream_name": "cloudwatch_log_stream"
-},
 "metrics": {
   "metrics_collected": {
      "statsd": {
