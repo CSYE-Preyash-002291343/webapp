@@ -1,5 +1,8 @@
 const express = require('express');
 const app = express();
+const morgan = require('morgan'); // Import Morgan
+const fs = require('fs');
+const path = require('path');
 require("dotenv").config();
 const userRouter = require('./routes/user');
 const healthzRouter = require('./routes/healthz');
@@ -11,6 +14,9 @@ const statsd = new StatsD();
 
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
+
+const accessLogStream = fs.createWriteStream(path.join('/opt/src/webapp/logs', 'webapp.log'), { flags: 'a' });
+app.use(morgan('combined', { stream: accessLogStream }));
 
 //Database connection via Sequelize ORM
 const { Sequelize } = require('sequelize');
