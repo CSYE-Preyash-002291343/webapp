@@ -8,7 +8,7 @@ rm amazon-cloudwatch-agent.deb
 # Set up CloudWatch Agent log file
 sudo mkdir -p /opt/src/webapp/logs
 sudo touch /opt/src/webapp/logs/webapp.log
-sudo chmod 666 /src/opt/webapp/logs/webapp.log
+sudo chmod 666 /opt/src/webapp/logs/webapp.log
 
 # Set up CloudWatch Agent configuration
 echo "Creating CloudWatch Agent configuration file..."
