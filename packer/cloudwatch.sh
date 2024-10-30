@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# Installing cloud watch agent for AWS
-sudo yum install amazon-cloudwatch-agent
+echo "Downloading and installing Amazon CloudWatch Agent..."
+wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+sudo dpkg -i amazon-cloudwatch-agent.deb
+rm amazon-cloudwatch-agent.deb  
 
 # Set up CloudWatch Agent configuration
 echo "Creating CloudWatch Agent configuration file..."
