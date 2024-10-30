@@ -15,7 +15,7 @@ const statsd = new StatsD();
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
-const accessLogStream = fs.createWriteStream(path.join('/opt/src/webapp/logs', 'webapp.log'), { flags: 'a' });
+const accessLogStream = fs.createWriteStream(path.join('logs', 'webapp.log'), { flags: 'a' });
 app.use(morgan('combined', { stream: accessLogStream }));
 
 //Database connection via Sequelize ORM
