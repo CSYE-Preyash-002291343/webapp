@@ -6,7 +6,9 @@ const s3 = new AWS.S3({
     apiVersion: '2006-03-01',
     region: 'us-east-1'
 });
-require('dotenv').config();
+require('dotenv').config(); 
+const StatsD = require('hot-shots');
+const statsd = new StatsD();
 
 exports.addImage = async (req, res) => {
     try {
@@ -38,12 +40,16 @@ exports.addImage = async (req, res) => {
 
         await uploadFileToS3(file, process.env.BUCKET);
         const customURL = `${process.env.BUCKET}/${userId}/${file.originalname}`;
+        const start = process.hrtime();
         const savedImage = await saveImageDetails({
             userId: req.user.id, 
             url: customURL,
             filename: file.originalname,
             upload_date: new Date(),
         });
+        const duration = process.hrtime(start);
+        const durationInMs = (duration[0] * 1000) + (duration[1] / 1000000);
+        statsd.timing('db.save_image_time', durationInMs);
 
         res.header('Cache-Control', 'no-store');
         res.header('Pragma', 'no-cache');

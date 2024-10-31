@@ -35,11 +35,31 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
 //Check if database connection is successful
 async function dbconnect(){
     try{
+        let start = process.hrtime();
         await sequelize.authenticate();
+        let duration = process.hrtime(start);
+        let durationInMs = (duration[0] * 1000) + (duration[1] / 1000000);
+        statsd.timing('db.connection_time', durationInMs);
+
+        start = process.hrtime();
         User.init(sequelize);
+        duration = process.hrtime(start);
+        durationInMs = (duration[0] * 1000) + (duration[1] / 1000000);
+        statsd.timing('db.user_init_time', durationInMs);
+
+        start = process.hrtime();
         Image.init(sequelize);
+        duration = process.hrtime(start);
+        durationInMs = (duration[0] * 1000) + (duration[1] / 1000000);
+        statsd.timing('db.image_init_time', durationInMs);
+
+        start = process.hrtime();
         User.sync({alter: true});
         Image.sync({alter: true});
+        duration = process.hrtime(start);
+        durationInMs = (duration[0] * 1000) + (duration[1] / 1000000);
+        statsd.timing('db.sync_time', durationInMs);
+
         console.log('Connected to DB');
     }catch(err){
         console.error('Disconnected from DB', err);
