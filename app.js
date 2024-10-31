@@ -46,23 +46,7 @@ async function dbconnect(){
     }
 }
 
-sequelize.addHook('query', (options) => {
-    options.startTime = process.hrtime();
-  });
-
 dbconnect();
-
-sequelize.addHook('query', (options) => {
-    if (options.startTime) {
-      const duration = process.hrtime(options.startTime);
-      const durationInMs = (duration[0] * 1000) + (duration[1] / 1000000);
-      
-      // Send metrics with query type and table name if available
-      const queryType = options.type || 'unknown_query';
-      const table = options.tableNames ? options.tableNames[0] : 'unknown_table';
-      statsd.timing(`db.${queryType}.${table}.response_time`, durationInMs);
-    }
-  });
 
 app.use((req, res, next) => {
   const start = process.hrtime();
