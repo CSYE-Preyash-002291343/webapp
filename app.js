@@ -15,13 +15,13 @@ const statsd = new StatsD();
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
-const logDir = path.join('logs');
+const logFilePath = path.join(__dirname, 'webapp.log');
 
-if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir, { recursive: true });
+if (!fs.existsSync(logFilePath)) {
+    fs.writeFileSync(logFilePath, '');
 }
 
-const accessLogStream = fs.createWriteStream(path.join(logDir, 'webapp.log'), { flags: 'a' });
+const accessLogStream = fs.createWriteStream(logFilePath, { flags: 'a' });
 app.use(morgan('combined', { stream: accessLogStream }));
 
 //Database connection via Sequelize ORM
