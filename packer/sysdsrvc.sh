@@ -34,6 +34,7 @@ EnvironmentFile=$ENV_FILE
 Type=simple
 User=csye6225
 Group=csye6225
+WorkingDirectory=$APP_CODE_DIR
 ExecStart=/usr/bin/node $APP_CODE_DIR/app.js
 Restart=always
 StandardOutput=syslog

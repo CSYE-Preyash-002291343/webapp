@@ -116,6 +116,7 @@ build {
     ]
     scripts = [
       "installer.sh",
+      "cloudwatch.sh",
       "sysdsrvc.sh"
     ]
   }
