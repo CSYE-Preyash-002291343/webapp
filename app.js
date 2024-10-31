@@ -46,13 +46,13 @@ async function dbconnect(){
     }
 }
 
-sequelize.before('query', (options) => {
+sequelize.addHook('query', (options) => {
     options.startTime = process.hrtime();
   });
 
 dbconnect();
 
-sequelize.after('query', (options) => {
+sequelize.addHook('query', (options) => {
     if (options.startTime) {
       const duration = process.hrtime(options.startTime);
       const durationInMs = (duration[0] * 1000) + (duration[1] / 1000000);
