@@ -32,7 +32,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
     port: process.env.DB_PORT
   });
 
-//Check if database connection is successful
+//Check if database connection is successfull for Database
 async function dbconnect(){
     try{
         let start = process.hrtime();
