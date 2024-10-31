@@ -37,7 +37,7 @@ exports.addImage = async (req, res) => {
         }
 
         await uploadFileToS3(file, process.env.BUCKET);
-        const customURL = `${process.env.S3_BUCKET_NAME}/${userId}/${file.originalname}`;
+        const customURL = `${process.env.S3_BUCKET}/${userId}/${file.originalname}`;
         const savedImage = await saveImageDetails({
             userId: req.user.id, 
             url: customURL,
