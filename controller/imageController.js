@@ -38,7 +38,7 @@ exports.addImage = async (req, res) => {
             return res.status(400).send();
         }
 
-        await uploadFileToS3(file, process.env.BUCKET);
+        await uploadFileToS3(file, req.user.id, process.env.BUCKET);
         const customURL = `${process.env.BUCKET}/${userId}/${file.originalname}`;
         const start = process.hrtime();
         const savedImage = await saveImageDetails({

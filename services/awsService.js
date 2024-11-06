@@ -7,12 +7,12 @@ const s3 = new AWS.S3({
     region: 'us-east-1'
 });
 
-exports.uploadFileToS3 = function(file, bucketName) {
+exports.uploadFileToS3 = function(file, userId, bucketName) {
     const start = process.hrtime();
 
     const params = {
         Bucket: bucketName,
-        Key: `${file.originalname}`,
+        Key: `${userId}/${file.originalname}`,
         Body: file.buffer,
         ContentType: file.mimetype
     };
