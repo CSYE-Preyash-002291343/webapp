@@ -108,7 +108,7 @@ exports.deleteImage = async (req, res) => {
 
         const params = {
             Bucket: process.env.BUCKET,
-            Key: `${image.filename}`
+            Key: `${req.user.id}/${image.filename}`
         };
 
         await s3.deleteObject(params).promise(); 
