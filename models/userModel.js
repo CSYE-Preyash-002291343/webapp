@@ -1,5 +1,6 @@
 const { Model, DataTypes} = require('sequelize');
 require('dotenv').config();
+const crypto = require('crypto');
 
 class User extends Model {
     static init(sequelize) {
@@ -35,11 +36,28 @@ class User extends Model {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
         allowNull: false
-    }
+    },
+    verificationToken : {
+        type: DataTypes.STRING
+    },
+    verificationTokenExpires : {
+        type: DataTypes.DATE
+    },
+    verificationStatus: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false, 
+        allowNull: false,
+    },
 }, {
     sequelize,
     modelName: 'User',
     timestamps: false,
+    hooks: {
+        beforeCreate: (user) => {
+            user.verificationToken = crypto.randomBytes(20).toString('hex'); 
+            user.verificationTokenExpires = new Date(Date.now() + 2 * 60 * 1000); 
+        }
+    },
 });
 }
 }
