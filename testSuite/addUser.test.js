@@ -2,9 +2,20 @@ const request = require('supertest');
 const User = require('../models/userModel');
 const { Sequelize } = require('sequelize');
 require("dotenv").config();
+const AWS = require('aws-sdk');
 const express = require('express');
 
 const app = require('../app');
+
+jest.mock('aws-sdk', () => {
+    const SNS = {
+        publish: jest.fn().mockReturnValue({
+            promise: jest.fn().mockResolvedValue({}),
+        }),
+    };
+    return { SNS: jest.fn(() => SNS) };
+});
+
 const email = 'test@gmail.com';
 
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
