@@ -116,11 +116,11 @@ exports.verifyUser = async (req, res) => {
         }
 
         if (user.verificationToken !== token) {
-            return res.status(401).send();
+            return res.status(400).send();
         }
 
         if (user.verificationTokenExpires < new Date()) {
-            return res.status(401).send();
+            return res.status(400).send();
         }
 
         user.verificationStatus = true;
@@ -128,7 +128,7 @@ exports.verifyUser = async (req, res) => {
         user.verificationTokenExpires = null;
         await user.save();
 
-        res.status(200).send();
+        res.status(204).send();
     } catch (error) {
         console.error('Error verifying user:', error);
         res.status(500).send();
