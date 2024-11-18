@@ -109,37 +109,31 @@ jobs:
 
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
-      - name: Update Auto Scaling Group to Use Latest Launch Template Version
+      - name: Refresh Auto Scaling Group
         run: |
-          aws autoscaling update-auto-scaling-group \
-            --auto-scaling-group-name ${{ vars.ASG_NAME }} \
-            --launch-template "LaunchTemplateId=${TEMPLATE_ID},Version=$NEW_VERSION"
-
-      - name: Start Instance Refresh
-        run: |
+          echo "Starting instance refresh for ASG: ${{ vars.ASG_NAME }}"
           REFRESH_ID=$(aws autoscaling start-instance-refresh \
             --auto-scaling-group-name ${{ vars.ASG_NAME }} \
             --query 'InstanceRefreshId' \
             --output text)
 
-          echo "Instance Refresh Started with ID: $REFRESH_ID"
-          echo "REFRESH_ID=$REFRESH_ID" >> $GITHUB_ENV
-
-      - name: Wait for Instance Refresh
-        run: |
+          echo "Monitoring instance refresh status..."
           while true; do
             STATUS=$(aws autoscaling describe-instance-refreshes \
               --auto-scaling-group-name ${{ vars.ASG_NAME }} \
+              --instance-refresh-ids ${REFRESH_ID} \
               --query 'InstanceRefreshes[0].Status' \
               --output text)
-              
-            echo "Refresh Status: $STATUS"
-            if [[ "$STATUS" == "Successful" ]]; then
-              echo "Instance Refresh Completed Successfully."
+
+            echo "Current refresh status: ${STATUS}"
+
+            if [ "${STATUS}" = "Successful" ]; then
+              echo "Instance refresh completed successfully"
               exit 0
-            elif [[ "$STATUS" == "Failed" ]]; then
-              echo "Instance Refresh Failed."
+            elif [ "${STATUS}" = "Failed" ] || [ "${STATUS}" = "Cancelled" ]; then
+              echo "Instance refresh failed or was cancelled"
               exit 1
             fi
+
             sleep 30
           done
