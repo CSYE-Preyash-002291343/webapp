@@ -2,23 +2,24 @@ const request = require('supertest');
 const User = require('../models/userModel');
 const { Sequelize } = require('sequelize');
 require("dotenv").config();
-const AWS = require('aws-sdk');
-const s3 = new AWS.S3({
-    apiVersion: '2006-03-01',
-    region: 'us-east-1',
-});
 const express = require('express');
 
 const app = require('../app');
 
 jest.mock('aws-sdk', () => {
-    return {
-        S3: jest.fn(() => ({
-            upload: jest.fn().mockReturnValue({
-                promise: jest.fn().mockResolvedValue({ Location: 'https://fake-s3-url.com/file.png' }),
-            }),
-        })),
-    };
+    const S3 = jest.fn(() => ({
+        upload: jest.fn().mockReturnValue({
+            promise: jest.fn().mockResolvedValue({ Location: 'https://fake-s3-url.com/file.png' }),
+        }),
+    }));
+    
+    const SNS = jest.fn(() => ({
+        publish: jest.fn().mockReturnValue({
+            promise: jest.fn().mockResolvedValue({ MessageId: 'mock-message-id' }),
+        }),
+    }));
+
+    return { S3, SNS };
 });
 
 const email = 'test@gmail.com';
