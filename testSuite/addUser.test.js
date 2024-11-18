@@ -3,17 +3,22 @@ const User = require('../models/userModel');
 const { Sequelize } = require('sequelize');
 require("dotenv").config();
 const AWS = require('aws-sdk');
+const s3 = new AWS.S3({
+    apiVersion: '2006-03-01',
+    region: 'us-east-1',
+});
 const express = require('express');
 
 const app = require('../app');
 
 jest.mock('aws-sdk', () => {
-    const SNS = {
-        publish: jest.fn().mockReturnValue({
-            promise: jest.fn().mockResolvedValue({}),
-        }),
+    return {
+        S3: jest.fn(() => ({
+            upload: jest.fn().mockReturnValue({
+                promise: jest.fn().mockResolvedValue({ Location: 'https://fake-s3-url.com/file.png' }),
+            }),
+        })),
     };
-    return { SNS: jest.fn(() => SNS) };
 });
 
 const email = 'test@gmail.com';
