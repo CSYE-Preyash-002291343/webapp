@@ -101,6 +101,9 @@ exports.verifyUser = async (req, res) => {
     try {
 
         if(!userid || !token) {
+            res.header('Cache-Control', 'no-store');
+            res.header('Pragma', 'no-cache');
+            res.header('Expires', '0');
             return res.status(400).send();
         }
 
@@ -112,18 +115,30 @@ exports.verifyUser = async (req, res) => {
         });
         
         if (!user) {
+            res.header('Cache-Control', 'no-store');
+            res.header('Pragma', 'no-cache');
+            res.header('Expires', '0');
             return res.status(400).send();
         }
 
         if (user.verificationStatus === true) {
+            res.header('Cache-Control', 'no-store');
+            res.header('Pragma', 'no-cache');
+            res.header('Expires', '0');
             return res.status(409).send();
         }
 
         if (user.verificationToken !== token) {
+            res.header('Cache-Control', 'no-store');
+            res.header('Pragma', 'no-cache');
+            res.header('Expires', '0');
             return res.status(400).send();
         }
 
         if (user.verificationTokenExpires < new Date()) {
+            res.header('Cache-Control', 'no-store');
+            res.header('Pragma', 'no-cache');
+            res.header('Expires', '0');
             return res.status(403).send();
         }
 
@@ -138,6 +153,9 @@ exports.verifyUser = async (req, res) => {
         res.status(204).send();
     } catch (error) {
         console.error('Error verifying user:', error);
+        res.header('Cache-Control', 'no-store');
+        res.header('Pragma', 'no-cache');
+        res.header('Expires', '0');
         res.status(400).send();
     }
 };
