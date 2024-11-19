@@ -1,6 +1,9 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const auth = require('basic-auth');
+const AWS = require('aws-sdk');
+const sns = new AWS.SNS({ region: 'us-east-1' });
+const { Op } = require('sequelize');
 
 exports.createUser = async (req, res) => {
     const { first_name, last_name, email, password } = req.body;
@@ -17,7 +20,23 @@ exports.createUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         const user = await User.create({ first_name, last_name, email, password : hashedPassword });
 
-        const { password: _, ...userData } = user.toJSON();
+        const { password: _, verificationToken, verificationTokenExpires, ...userData } = user.toJSON();
+
+        const messagePayload = {
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            verificationToken: user.verificationToken,
+            timestamp: new Date().toISOString(),
+        };
+
+        const snsParams = {
+            Message: JSON.stringify(messagePayload),
+            TopicArn: process.env.SNS_TOPIC_ARN    // SNS Topic ARN to be set in environment variables
+        };
+
+        await sns.publish(snsParams).promise();
+
         res.header('Cache-Control', 'no-store');
         res.header('Pragma', 'no-cache');
         res.header('Expires', '0');
@@ -25,14 +44,14 @@ exports.createUser = async (req, res) => {
     }
     catch (error) {
         console.log(error);
-        return res.status(400).send('');
+        return res.status(400).send();
     }
 };
 
 exports.getUser = async (req, res) => {
 
   try {
-    const { password: _, ...userData } = req.user;
+    const { password: _,verificationToken, verificationTokenExpires, ...userData } = req.user;
     res.header('Cache-Control', 'no-store');
     res.header('Pragma', 'no-cache');
     res.header('Expires', '0');
@@ -72,5 +91,71 @@ exports.updateUser = async (req, res) => {
         return res.status(204).send();
     } catch (error) {
         return res.status(400).send();
+    }
+};
+
+exports.verifyUser = async (req, res) => {
+    const { userid, token } = req.query; 
+
+
+    try {
+
+        if(!userid || !token) {
+            res.header('Cache-Control', 'no-store');
+            res.header('Pragma', 'no-cache');
+            res.header('Expires', '0');
+            return res.status(400).send();
+        }
+
+        const user = await User.findOne({
+            where: {
+                email: userid,
+                verificationTokenExpires: { [Op.gt]: new Date() }, 
+            },
+        });
+        
+        if (!user) {
+            res.header('Cache-Control', 'no-store');
+            res.header('Pragma', 'no-cache');
+            res.header('Expires', '0');
+            return res.status(400).send();
+        }
+
+        if (user.verificationStatus === true) {
+            res.header('Cache-Control', 'no-store');
+            res.header('Pragma', 'no-cache');
+            res.header('Expires', '0');
+            return res.status(409).send();
+        }
+
+        if (user.verificationToken !== token) {
+            res.header('Cache-Control', 'no-store');
+            res.header('Pragma', 'no-cache');
+            res.header('Expires', '0');
+            return res.status(400).send();
+        }
+
+        if (user.verificationTokenExpires < new Date()) {
+            res.header('Cache-Control', 'no-store');
+            res.header('Pragma', 'no-cache');
+            res.header('Expires', '0');
+            return res.status(403).send();
+        }
+
+        user.verificationStatus = true;
+        user.verificationToken = null;
+        user.verificationTokenExpires = null;
+        await user.save();
+
+        res.header('Cache-Control', 'no-store');
+        res.header('Pragma', 'no-cache');
+        res.header('Expires', '0');
+        res.status(204).send();
+    } catch (error) {
+        console.error('Error verifying user:', error);
+        res.header('Cache-Control', 'no-store');
+        res.header('Pragma', 'no-cache');
+        res.header('Expires', '0');
+        res.status(400).send();
     }
 };

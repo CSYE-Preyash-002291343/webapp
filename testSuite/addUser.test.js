@@ -5,6 +5,23 @@ require("dotenv").config();
 const express = require('express');
 
 const app = require('../app');
+
+jest.mock('aws-sdk', () => {
+    const S3 = jest.fn(() => ({
+        upload: jest.fn().mockReturnValue({
+            promise: jest.fn().mockResolvedValue({ Location: 'https://fake-s3-url.com/file.png' }),
+        }),
+    }));
+    
+    const SNS = jest.fn(() => ({
+        publish: jest.fn().mockReturnValue({
+            promise: jest.fn().mockResolvedValue({ MessageId: 'mock-message-id' }),
+        }),
+    }));
+
+    return { S3, SNS };
+});
+
 const email = 'test@gmail.com';
 
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {

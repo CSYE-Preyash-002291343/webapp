@@ -7,6 +7,7 @@ const authenticateUser = require('../middleware/authenticator');
 const userController = require('../controller/userController');
 const validateCreateUser = require('../middleware/validatorForCreate');
 const validateUpdateUserInfo = require('../middleware/validatorForUpdate');
+const { checkVerificationStatus }= require('../middleware/userValidator');
 const payload = require('../middleware/Payload');
 
 //create user
@@ -19,11 +20,28 @@ router.head('/self', async (req, res) => {
     res.status(405).send();
 });
 
+router.head('/self/verify', async (req, res) => {
+    res.header('Cache-Control', 'no-store');
+    res.header('Pragma', 'no-cache');
+    res.header('Expires', '0');
+    res.status(405).send();
+});
+
 //get user by id
-router.get('/self', payload, authenticateUser, userController.getUser);
+router.get('/self', payload, authenticateUser, checkVerificationStatus, userController.getUser);
 
 //update user by id
-router.put('/self', validateUpdateUserInfo, authenticateUser, userController.updateUser);
+router.put('/self', validateUpdateUserInfo, authenticateUser, checkVerificationStatus, userController.updateUser);
+
+//verify user route
+router.get('/self/verify', userController.verifyUser);
+
+router.all('/self/verify', (req, res) => {
+    res.header('Cache-Control', 'no-store');
+    res.header('Pragma', 'no-cache');
+    res.header('Expires', '0');
+    res.status(405).send();
+});
 
 router.all('/self', (req, res) => {
     res.header('Cache-Control', 'no-store');

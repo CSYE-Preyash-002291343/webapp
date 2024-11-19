@@ -1,7 +1,7 @@
 const { body, validationResult } = require('express-validator');
 
 const acceptedpayload = ['first_name', 'last_name', 'email', 'password'];
-const ignoredfields = ['account_created', 'account_updated'];
+const ignoredfields = ['account_created', 'account_updated', 'verificationStatus', 'verificationToken', 'verificationTokenExpires'];
 
 const validateCreateUser = [
     body('first_name').trim().isAlpha(),

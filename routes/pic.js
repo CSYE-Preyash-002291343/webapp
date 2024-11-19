@@ -4,9 +4,10 @@ require('dotenv').config();
 const authenticateUser = require('../middleware/authenticator');
 const imageController = require('../controller/imageController');
 const { uploadSingleImage } = require('../middleware/imageUpload');
+const { checkVerificationStatus }= require('../middleware/userValidator');
 
 //Add image
-router.post('/', authenticateUser, uploadSingleImage, imageController.addImage);
+router.post('/', authenticateUser, checkVerificationStatus, uploadSingleImage, imageController.addImage);
 
 router.head('/', async (req, res) => {
     res.header('Cache-Control', 'no-store');
@@ -16,10 +17,10 @@ router.head('/', async (req, res) => {
 });
 
 //Get image for user
-router.get('/', authenticateUser, imageController.getImage);
+router.get('/', authenticateUser, checkVerificationStatus, imageController.getImage);
 
 //Delete image
-router.delete('/', authenticateUser, imageController.deleteImage);
+router.delete('/', authenticateUser, checkVerificationStatus, imageController.deleteImage);
 
 router.all('/', (req, res) => {
     res.header('Cache-Control', 'no-store');
