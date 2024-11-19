@@ -86,8 +86,18 @@ jobs:
           -var 'aws_region=${{ vars.REGION }}' \
           -var 'source_ami=${{ vars.AMI }}' \
           -var 'subnet_id=${{ vars.SUBNET }}' aws.pkr.hcl | grep -oP 'ami-\w{8,17}' | tail -1)
+
+          echo "Created AMI ID: $AMI_ID"
           echo "AMI_ID=$AMI_ID" >> $GITHUB_ENV
 
+      - name: Setup AWS Credentials (Demo Environment)
+        if: ${{ vars.ENVIRONMENT}} == 'demo'
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.DEMO_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DEMO_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      
       - name: Update Launch Template Version
         run: |
           echo "Fetching Template ID"
