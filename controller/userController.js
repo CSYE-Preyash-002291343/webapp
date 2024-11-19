@@ -51,7 +51,7 @@ exports.createUser = async (req, res) => {
 exports.getUser = async (req, res) => {
 
   try {
-    const { password: _, ...userData } = req.user;
+    const { password: _,verificationToken, verificationTokenExpires, ...userData } = req.user;
     res.header('Cache-Control', 'no-store');
     res.header('Pragma', 'no-cache');
     res.header('Expires', '0');
@@ -112,7 +112,11 @@ exports.verifyUser = async (req, res) => {
         });
         
         if (!user) {
-            return res.status(404).send();
+            return res.status(400).send();
+        }
+
+        if (user.verificationStatus === true) {
+            return res.status(409).send();
         }
 
         if (user.verificationToken !== token) {
@@ -120,7 +124,7 @@ exports.verifyUser = async (req, res) => {
         }
 
         if (user.verificationTokenExpires < new Date()) {
-            return res.status(400).send();
+            return res.status(403).send();
         }
 
         user.verificationStatus = true;
@@ -128,9 +132,12 @@ exports.verifyUser = async (req, res) => {
         user.verificationTokenExpires = null;
         await user.save();
 
+        res.header('Cache-Control', 'no-store');
+        res.header('Pragma', 'no-cache');
+        res.header('Expires', '0');
         res.status(204).send();
     } catch (error) {
         console.error('Error verifying user:', error);
-        res.status(500).send();
+        res.status(400).send();
     }
 };

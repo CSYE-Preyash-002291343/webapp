@@ -29,6 +29,13 @@ router.put('/self', validateUpdateUserInfo, authenticateUser, checkVerificationS
 //verify user route
 router.get('/self/verify', userController.verifyUser);
 
+router.all('/self/verify', (req, res) => {
+    res.header('Cache-Control', 'no-store');
+    res.header('Pragma', 'no-cache');
+    res.header('Expires', '0');
+    res.status(405).send();
+});
+
 router.all('/self', (req, res) => {
     res.header('Cache-Control', 'no-store');
     res.header('Pragma', 'no-cache');
