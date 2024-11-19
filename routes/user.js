@@ -20,6 +20,13 @@ router.head('/self', async (req, res) => {
     res.status(405).send();
 });
 
+router.head('/self/verify', async (req, res) => {
+    res.header('Cache-Control', 'no-store');
+    res.header('Pragma', 'no-cache');
+    res.header('Expires', '0');
+    res.status(405).send();
+});
+
 //get user by id
 router.get('/self', payload, authenticateUser, checkVerificationStatus, userController.getUser);
 
