@@ -83,6 +83,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/healthz', healthzRouter);
+app.use('/cdz', healthzRouter);
 app.use('/v1/user/', userRouter);
 app.use('/v1/user/self/pic', picRouter)
 
